@@ -14,7 +14,7 @@ import (
 
 func main() {
 	pps := plugin.NewSet()
-	pps.RegisterDatasource("my-datasource", new(infisicalData.Datasource))
+	pps.RegisterDatasource("secrets", new(infisicalData.Datasource))
 	pps.SetVersion(infisicalVersion.PluginVersion)
 	err := pps.Run()
 	if err != nil {

@@ -10,7 +10,10 @@ import (
 // FlatConfig is an auto-generated flat version of Config.
 // Where the contents of a field with a `mapstructure:,squash` tag are bubbled up.
 type FlatConfig struct {
-	MockOption *string `mapstructure:"mock" cty:"mock" hcl:"mock"`
+	Host         *string `mapstructure:"host" cty:"host" hcl:"host"`
+	ServiceToken *string `mapstructure:"service_token" cty:"service_token" hcl:"service_token"`
+	FolderPath   *string `mapstructure:"folder_path" cty:"folder_path" hcl:"folder_path"`
+	EnvSlug      *string `mapstructure:"env_slug" cty:"env_slug" hcl:"env_slug"`
 }
 
 // FlatMapstructure returns a new FlatConfig.
@@ -25,7 +28,10 @@ func (*Config) FlatMapstructure() interface{ HCL2Spec() map[string]hcldec.Spec }
 // The decoded values from this spec will then be applied to a FlatConfig.
 func (*FlatConfig) HCL2Spec() map[string]hcldec.Spec {
 	s := map[string]hcldec.Spec{
-		"mock": &hcldec.AttrSpec{Name: "mock", Type: cty.String, Required: false},
+		"host":          &hcldec.AttrSpec{Name: "host", Type: cty.String, Required: false},
+		"service_token": &hcldec.AttrSpec{Name: "service_token", Type: cty.String, Required: false},
+		"folder_path":   &hcldec.AttrSpec{Name: "folder_path", Type: cty.String, Required: false},
+		"env_slug":      &hcldec.AttrSpec{Name: "env_slug", Type: cty.String, Required: false},
 	}
 	return s
 }
@@ -33,8 +39,7 @@ func (*FlatConfig) HCL2Spec() map[string]hcldec.Spec {
 // FlatDatasourceOutput is an auto-generated flat version of DatasourceOutput.
 // Where the contents of a field with a `mapstructure:,squash` tag are bubbled up.
 type FlatDatasourceOutput struct {
-	Foo *string `mapstructure:"foo" cty:"foo" hcl:"foo"`
-	Bar *string `mapstructure:"bar" cty:"bar" hcl:"bar"`
+	Secrets map[string]InfisicalSecretDetails `mapstructure:"secrets" cty:"secrets" hcl:"secrets"`
 }
 
 // FlatMapstructure returns a new FlatDatasourceOutput.
@@ -49,8 +54,7 @@ func (*DatasourceOutput) FlatMapstructure() interface{ HCL2Spec() map[string]hcl
 // The decoded values from this spec will then be applied to a FlatDatasourceOutput.
 func (*FlatDatasourceOutput) HCL2Spec() map[string]hcldec.Spec {
 	s := map[string]hcldec.Spec{
-		"foo": &hcldec.AttrSpec{Name: "foo", Type: cty.String, Required: false},
-		"bar": &hcldec.AttrSpec{Name: "bar", Type: cty.String, Required: false},
+		"secrets": &hcldec.AttrSpec{Name: "secrets", Type: cty.Map(cty.String), Required: false},
 	}
 	return s
 }

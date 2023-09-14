@@ -5,6 +5,10 @@
 package infisical
 
 import (
+	"os"
+
+	infisical "packer-plugin-infisical/client"
+
 	"github.com/hashicorp/hcl/v2/hcldec"
 	"github.com/hashicorp/packer-plugin-sdk/hcl2helper"
 	"github.com/hashicorp/packer-plugin-sdk/template/config"
@@ -12,16 +16,29 @@ import (
 )
 
 type Config struct {
-	MockOption string `mapstructure:"mock"`
+	Host         string `mapstructure:"host"`
+	ServiceToken string `mapstructure:"service_token"`
+	FolderPath   string `mapstructure:"folder_path"`
+	EnvSlug      string `mapstructure:"env_slug"`
+}
+
+type Client struct {
+	Client *infisical.Client
 }
 
 type Datasource struct {
 	config Config
+	client Client
+}
+
+type InfisicalSecretDetails struct {
+	Value      string `mapstructure:"value"`
+	Comment    string `mapstructure:"comment"`
+	SecretType string `mapstructure:"secret_type"`
 }
 
 type DatasourceOutput struct {
-	Foo string `mapstructure:"foo"`
-	Bar string `mapstructure:"bar"`
+	Secrets map[string]InfisicalSecretDetails `mapstructure:"secrets"`
 }
 
 func (d *Datasource) ConfigSpec() hcldec.ObjectSpec {
@@ -33,6 +50,19 @@ func (d *Datasource) Configure(raws ...interface{}) error {
 	if err != nil {
 		return err
 	}
+
+	host := os.Getenv("INFISICAL_HOST")
+	// Set default to cloud infisical if host is empty
+	if d.config.Host == "" && host == "" {
+		d.config.Host = "https://app.infisical.com"
+	}
+
+	client, client_err := infisical.NewClient(infisical.Config{HostURL: d.config.Host, ServiceToken: d.config.ServiceToken})
+	d.client.Client = client
+	if client_err != nil {
+		return client_err
+	}
+
 	return nil
 }
 
@@ -41,9 +71,16 @@ func (d *Datasource) OutputSpec() hcldec.ObjectSpec {
 }
 
 func (d *Datasource) Execute() (cty.Value, error) {
-	output := DatasourceOutput{
-		Foo: "foo-value",
-		Bar: "bar-value",
+	plainTextSecrets, _, err := d.client.Client.GetPlainTextSecretsViaServiceToken(d.config.FolderPath, d.config.EnvSlug)
+	if err != nil {
+		return cty.Value{}, err
 	}
+
+	secrets := make(map[string]InfisicalSecretDetails)
+	for _, secret := range plainTextSecrets {
+		secrets[secret.Key] = InfisicalSecretDetails{Value: secret.Value, Comment: secret.Comment, SecretType: secret.Type}
+	}
+
+	output := DatasourceOutput{Secrets: secrets}
 	return hcl2helper.HCL2ValueFromConfig(output, d.OutputSpec()), nil
 }
