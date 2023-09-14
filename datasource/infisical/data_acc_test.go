@@ -1,7 +1,7 @@
 // Copyright (c) HashiCorp, Inc.
 // SPDX-License-Identifier: MPL-2.0
 
-package scaffolding
+package infisical
 
 import (
 	_ "embed"
@@ -18,10 +18,10 @@ import (
 //go:embed test-fixtures/template.pkr.hcl
 var testDatasourceHCL2Basic string
 
-// Run with: PACKER_ACC=1 go test -count 1 -v ./datasource/scaffolding/data_acc_test.go  -timeout=120m
-func TestAccScaffoldingDatasource(t *testing.T) {
+// Run with: PACKER_ACC=1 go test -count 1 -v ./datasource/infisical/data_acc_test.go  -timeout=120m
+func TestAccinfisicalDatasource(t *testing.T) {
 	testCase := &acctest.PluginTestCase{
-		Name: "scaffolding_datasource_basic_test",
+		Name: "infisical_datasource_basic_test",
 		Setup: func() error {
 			return nil
 		},
@@ -29,7 +29,7 @@ func TestAccScaffoldingDatasource(t *testing.T) {
 			return nil
 		},
 		Template: testDatasourceHCL2Basic,
-		Type:     "scaffolding-my-datasource",
+		Type:     "infisical-my-datasource",
 		Check: func(buildCommand *exec.Cmd, logfile string) error {
 			if buildCommand.ProcessState != nil {
 				if buildCommand.ProcessState.ExitCode() != 0 {

@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: MPL-2.0
 
 //go:generate packer-sdc mapstructure-to-hcl2 -type Config,DatasourceOutput
-package scaffolding
+package infisical
 
 import (
 	"github.com/hashicorp/hcl/v2/hcldec"
