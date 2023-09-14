@@ -1,13 +1,9 @@
-# infisical Plugins
+# Infisical Plugin
+The `Infisical` multi-component plugin can be used with HashiCorp [Packer](https://www.packer.io) to read secrets from [Infisical](https://infisical.com/).
 
-<!--
-  Include a short overview about the plugin.
+For the full list of available features for this plugin see [docs](docs).
 
-  This document is a great location for creating a table of contents for each
-  of the components the plugin may provide. This document should load automatically
-  when navigating to the docs directory for a plugin.
-
--->
+The Infisical client code was took 1:1 from the [Terraform provider](https://github.com/Infisical/terraform-provider-infisical).
 
 ## Installation
 
@@ -27,7 +23,7 @@ packer {
   required_plugins {
     name = {
       version = ">= 0.0.1"
-      source  = "github.com/hashicorp/name"
+      source  = "github.com/salcatroppa/infisical"
     }
   }
 }
@@ -35,7 +31,7 @@ packer {
 
 #### Manual installation
 
-You can find pre-built binary releases of the plugin [here](https://github.com/hashicorp/packer-plugin-name/releases).
+You can find pre-built binary releases of the plugin [here](https://github.com/salcatroppa/packer-plugin-infisical/releases).
 Once you have downloaded the latest archive corresponding to your target OS,
 uncompress it to retrieve the plugin binary file corresponding to your platform.
 To install the plugin, please follow the Packer documentation on
@@ -45,7 +41,7 @@ To install the plugin, please follow the Packer documentation on
 #### From Source
 
 If you prefer to build the plugin from its source code, clone the GitHub
-repository locally and run the command `go build` from the root
+repository locally and run the command `make build` from the root
 directory. Upon successful compilation, a `packer-plugin-name` plugin
 binary file can be found in the root directory.
 To install the compiled plugin, please follow the official Packer documentation
@@ -53,26 +49,7 @@ on [installing a plugin](https://www.packer.io/docs/extending/plugins/#installin
 
 
 ## Plugin Contents
-
-The infisical plugin is intended as a starting point for creating Packer plugins, containing:
-
-### Builders
-
-- [builder](/docs/builders/builder-name.mdx) - The infisical builder is used to create endless Packer
-  plugins using a consistent plugin structure.
-
-### Provisioners
-
-- [provisioner](/docs/provisioners/provisioner-name.mdx) - The infisical provisioner is used to provisioner
-  Packer builds.
-
-### Post-processors
-
-- [post-processor](/docs/post-processors/postprocessor-name.mdx) - The infisical post-processor is used to
-  export infisical builds.
-
 ### Data Sources
 
-- [data source](/docs/datasources/datasource-name.mdx) - The infisical data source is used to
-  export infisical data.
-
+- [secrets](/docs/datasources/secrets.mdx) - The `secrets` data source is used to
+  read secrets from [Infisical](https://infisical.com/).
