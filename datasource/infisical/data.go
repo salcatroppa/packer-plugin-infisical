@@ -38,7 +38,7 @@ type InfisicalSecretDetails struct {
 }
 
 type DatasourceOutput struct {
-	Secrets map[string]InfisicalSecretDetails `mapstructure:"secrets"`
+	Secrets map[string]string `mapstructure:"secrets"`
 }
 
 func (d *Datasource) ConfigSpec() hcldec.ObjectSpec {
@@ -55,6 +55,11 @@ func (d *Datasource) Configure(raws ...interface{}) error {
 	// Set default to cloud infisical if host is empty
 	if d.config.Host == "" && host == "" {
 		d.config.Host = "https://app.infisical.com"
+	}
+
+	serviceToken := os.Getenv("INFISICAL_SERVICE_TOKEN")
+	if d.config.ServiceToken == "" {
+		d.config.ServiceToken = serviceToken
 	}
 
 	client, client_err := infisical.NewClient(infisical.Config{HostURL: d.config.Host, ServiceToken: d.config.ServiceToken})
@@ -76,11 +81,14 @@ func (d *Datasource) Execute() (cty.Value, error) {
 		return cty.Value{}, err
 	}
 
-	secrets := make(map[string]InfisicalSecretDetails)
+	secrets := make(map[string]string)
 	for _, secret := range plainTextSecrets {
-		secrets[secret.Key] = InfisicalSecretDetails{Value: secret.Value, Comment: secret.Comment, SecretType: secret.Type}
+		secrets[secret.Key] = secret.Value
 	}
 
-	output := DatasourceOutput{Secrets: secrets}
+	output := DatasourceOutput{
+		Secrets: secrets,
+	}
+
 	return hcl2helper.HCL2ValueFromConfig(output, d.OutputSpec()), nil
 }

@@ -39,7 +39,7 @@ func (*FlatConfig) HCL2Spec() map[string]hcldec.Spec {
 // FlatDatasourceOutput is an auto-generated flat version of DatasourceOutput.
 // Where the contents of a field with a `mapstructure:,squash` tag are bubbled up.
 type FlatDatasourceOutput struct {
-	Secrets map[string]InfisicalSecretDetails `mapstructure:"secrets" cty:"secrets" hcl:"secrets"`
+	Secrets map[string]string `mapstructure:"secrets" cty:"secrets" hcl:"secrets"`
 }
 
 // FlatMapstructure returns a new FlatDatasourceOutput.

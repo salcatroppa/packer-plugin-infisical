@@ -29,7 +29,7 @@ func TestAccinfisicalDatasource(t *testing.T) {
 			return nil
 		},
 		Template: testDatasourceHCL2Basic,
-		Type:     "infisical-my-datasource",
+		Type:     "infisical-secrets",
 		Check: func(buildCommand *exec.Cmd, logfile string) error {
 			if buildCommand.ProcessState != nil {
 				if buildCommand.ProcessState.ExitCode() != 0 {
@@ -49,14 +49,10 @@ func TestAccinfisicalDatasource(t *testing.T) {
 			}
 			logsString := string(logsBytes)
 
-			fooLog := "null.basic-example: foo: foo-value"
-			barLog := "null.basic-example: bar: bar-value"
+			fooLog := "null.basic-example: secret_key: SECRET_VALUE"
 
 			if matched, _ := regexp.MatchString(fooLog+".*", logsString); !matched {
 				t.Fatalf("logs doesn't contain expected foo value %q", logsString)
-			}
-			if matched, _ := regexp.MatchString(barLog+".*", logsString); !matched {
-				t.Fatalf("logs doesn't contain expected bar value %q", logsString)
 			}
 			return nil
 		},

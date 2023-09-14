@@ -1,13 +1,13 @@
 # Copyright (c) HashiCorp, Inc.
 # SPDX-License-Identifier: MPL-2.0
 
-data "infisical-my-datasource" "test" {
-  mock = "mock-config"
+data "infisical-secrets" "test" {
+  folder_path = "/"
+  env_slug    = "dev"
 }
 
 locals {
-  foo = data.infisical-my-datasource.test.foo
-  bar = data.infisical-my-datasource.test.bar
+  secrets = data.infisical-secrets.test.secrets
 }
 
 source "null" "basic-example" {
@@ -21,8 +21,7 @@ build {
 
   provisioner "shell-local" {
     inline = [
-      "echo foo: ${local.foo}",
-      "echo bar: ${local.bar}",
+      "echo secret_key: ${local.secrets["SECRET_KEY"]}",
     ]
   }
 }
